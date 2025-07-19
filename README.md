@@ -40,5 +40,7 @@ Cache API
 
 OUTPUT
 
+<img width="1365" height="694" alt="Image" src="https://github.com/user-attachments/assets/2eb74139-3da9-485d-9288-cc8bee2a4af2" />
+
 
 
