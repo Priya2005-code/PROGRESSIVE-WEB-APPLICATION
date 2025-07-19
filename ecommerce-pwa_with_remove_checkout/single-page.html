@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SimpleShop (Single Page)</title>
+  <style>
+    body { font-family: Arial; text-align: center; padding: 1rem; }
+    nav a { margin: 1rem; cursor: pointer; color: blue; text-decoration: underline; }
+    .page { display: none; }
+    .active { display: block; }
+    ul { list-style: none; padding: 0; }
+    button { margin-left: 10px; }
+  </style>
+</head>
+<body>
+
+  <h1>🛍️ SimpleShop</h1>
+  <nav>
+    <a onclick="showPage('home')">Home</a>
+    <a onclick="showPage('products')">Products</a>
+    <a onclick="showPage('cart')">Cart</a>
+  </nav>
+
+  <!-- Home Section -->
+  <div id="home" class="page active">
+    <h2>Welcome to SimpleShop</h2>
+    <p>Browse products and add them to your cart!</p>
+  </div>
+
+  <!-- Products Section -->
+  <div id="products" class="page">
+    <h2>Products</h2>
+    <div>
+      <h3>Wireless Earbuds - $25</h3>
+      <button onclick="addToCart('Wireless Earbuds', 25)">Add to Cart</button>
+    </div>
+    <div>
+      <h3>Smart Watch - $50</h3>
+      <button onclick="addToCart('Smart Watch', 50)">Add to Cart</button>
+    </div>
+    <div>
+      <h3>Bluetooth Speaker - $35</h3>
+      <button onclick="addToCart('Bluetooth Speaker', 35)">Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Cart Section -->
+  <div id="cart" class="page">
+    <h2>Your Cart</h2>
+    <div id="cart-container"></div>
+  </div>
+
+  <script>
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      if (id === 'cart') renderCart();
+    }
+
+    function addToCart(name, price) {
+      const product = { name, price };
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.push(product);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      alert(`${name} added to cart!`);
+    }
+
+    function renderCart() {
+      const cartContainer = document.getElementById('cart-container');
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      if (cart.length === 0) {
+        cartContainer.innerHTML = "<p>Your cart is empty.</p>";
+        return;
+      }
+
+      let total = 0;
+      let output = '<ul>';
+      cart.forEach((item, index) => {
+        output += `<li>${item.name} - $${item.price} 
+          <button onclick="removeItem(${index})">Remove</button>
+        </li>`;
+        total += item.price;
+      });
+      output += '</ul>';
+      output += `<p><strong>Total:</strong> $${total}</p>`;
+      output += '<button onclick="checkout()">Checkout</button>';
+      cartContainer.innerHTML = output;
+    }
+
+    function removeItem(index) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderCart();
+    }
+
+    function checkout() {
+      alert('Checkout complete! Thank you for shopping.');
+      localStorage.removeItem('cart');
+      renderCart();
+    }
+  </script>
+
+</body>
+</html>
